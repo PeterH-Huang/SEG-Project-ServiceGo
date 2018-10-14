@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AppSEG2105</string>
+    <string name="admin">Admin</string>
+    <string name="button">Button</string>
+    <string name="button2">Button</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="button3">Button</string>
+</resources>
