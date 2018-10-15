@@ -30,4 +30,7 @@ public class User {
     public String getPassword(){
         return password;
     }
+    public String getTypeOfAccount(){
+        return typeOfAccount;
+    }
 }
