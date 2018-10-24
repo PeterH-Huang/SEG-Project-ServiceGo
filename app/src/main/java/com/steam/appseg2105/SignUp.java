@@ -29,6 +29,7 @@ public class SignUp extends AppCompatActivity {
     EditText passwordEdit;
     Button signUpButton;
     EditText emailEdit;
+    Spinner spinner;
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class SignUp extends AppCompatActivity {
                 addUser();
             }
         });
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner = findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.user, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -56,6 +57,7 @@ public class SignUp extends AppCompatActivity {
         String email = emailEdit.getText().toString().trim();
         String password = passwordEdit.getText().toString().trim();
         String username = usernameEdit.getText().toString().trim();
+        //To make sure they are not signed in
         FirebaseAuth.getInstance().signOut();
         //wont create an account with dupe email
         //creates account and logs in after delay (the while loop waits for this delay)
@@ -112,12 +114,12 @@ public class SignUp extends AppCompatActivity {
     private void addToUserModel() {
         String username = usernameEdit.getText().toString().trim();
         String password = passwordEdit.getText().toString().trim();
-        String email = emailEdit.getText().toString().trim();
+        String typeOfAcc = String.valueOf(spinner.getSelectedItem());
         FirebaseUser userNew = FirebaseAuth.getInstance().getCurrentUser();
         if (userNew != null) {
             //creates the user with the id of the email account
                 String id = userNew.getUid();
-                User userAccount = new User(id, username, password, "Admin");
+                User userAccount = new User(id, username, password, typeOfAcc);
                 databaseUsers.child(id).setValue(userAccount);
                 usernameEdit.setText("");
                 passwordEdit.setText("");
