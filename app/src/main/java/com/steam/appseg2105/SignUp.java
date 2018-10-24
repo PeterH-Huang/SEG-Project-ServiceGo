@@ -48,62 +48,79 @@ public class SignUp extends AppCompatActivity {
     private void addUser() {
         String email = emailEdit.getText().toString().trim();
         String password = passwordEdit.getText().toString().trim();
+        String username = usernameEdit.getText().toString().trim();
         FirebaseAuth.getInstance().signOut();
         //wont create an account with dupe email
         //creates account and logs in after delay (the while loop waits for this delay)
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // Magic here
+        if ((TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username))) {
+            Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_LONG).show();
+        }else if (password.length() < 6){
+            Toast.makeText(this, "Your password must be at least 6 characters long.", Toast.LENGTH_LONG).show();
+        } else if (password.length() > 16) {
+            Toast.makeText(this, "Your password must be no more than 16 characters long.", Toast.LENGTH_LONG).show();
+        } else if (password.equals(password.toLowerCase())) {
+            Toast.makeText(this, "Your password must contain at least one uppercase character.", Toast.LENGTH_LONG).show();
+        } else if (TextUtils.isDigitsOnly(password)) {
+            Toast.makeText(this, "Your password must contain letters.", Toast.LENGTH_LONG).show();
+        } else if (!email.contains("@")) {
+            Toast.makeText(this, "Please enter a correct E-mail address3.", Toast.LENGTH_LONG).show();
+        }else if(!(email.indexOf("@") == email.lastIndexOf("@"))) {
+            Toast.makeText(this, "Please enter a correct E-mail address2.", Toast.LENGTH_LONG).show();
+        }else if (!(email.endsWith(".com") || email.endsWith(".ca") || email.endsWith(".co.uk") || email.endsWith(".net") || email.endsWith(".au"))) {
+            Toast.makeText(this, "Please enter a correct E-mail address1.", Toast.LENGTH_LONG).show();
+        }else if (username.length() > 16) {
+            Toast.makeText(this, "Your username must be no more than 16 characters long.", Toast.LENGTH_LONG).show();
+        }else if (username.length() < 6) {
+            Toast.makeText(this, "Your username must be longer than 6 characters.", Toast.LENGTH_LONG).show();
+        }else{
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Magic here
+                                    }
+                                }, 1000);
+                                addToUserModel();
+                            } else {
+                                if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                    Toast.makeText(SignUp.this, "User with this email already exists.", Toast.LENGTH_SHORT).show();
+                                    usernameEdit.setText("");
+                                    passwordEdit.setText("");
+                                    emailEdit.setText("");
+                                    recreate();
                                 }
-                            }, 1000);
-                            addToUserModel();
-                        } else {
-                            if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                Toast.makeText(SignUp.this, "User with this email already exists.", Toast.LENGTH_SHORT).show();
-                                usernameEdit.setText("");
-                                passwordEdit.setText("");
-                                emailEdit.setText("");
-                                recreate();
                             }
+
+
+                            // ...
                         }
-
-
-                        // ...
-                    }
-                });
-        //delay to give time to create account and login on firebase
-
-
+                    });
+            //delay to give time to create account and login on firebase
+        }
     }
-    private void addToUserModel(){
+    private void addToUserModel() {
         String username = usernameEdit.getText().toString().trim();
         String password = passwordEdit.getText().toString().trim();
+        String email = emailEdit.getText().toString().trim();
         FirebaseUser userNew = FirebaseAuth.getInstance().getCurrentUser();
-        if(userNew != null){
+        if (userNew != null) {
             //creates the user with the id of the email account
-            if (!(TextUtils.isEmpty(username) && TextUtils.isEmpty(password))) {
                 String id = userNew.getUid();
                 User userAccount = new User(id, username, password, "Admin");
                 databaseUsers.child(id).setValue(userAccount);
                 usernameEdit.setText("");
                 passwordEdit.setText("");
                 emailEdit.setText("");
-                Toast.makeText(this, "Account Creation Successful", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Account Creation Successful.", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(SignUp.this, SignIn.class));
-            } else {
-                Toast.makeText(this, "Account Creation Unsuccessful", Toast.LENGTH_LONG).show();
-            }
-
         }
     }
-
 }
+
 
 
 
