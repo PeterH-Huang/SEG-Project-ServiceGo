@@ -7,4 +7,9 @@
     <string name="username">username</string>
     <string name="password">password</string>
     <string name="button3">Button</string>
+    <string-array name="user">
+        <item>Admin</item>
+        <item>Home Owner</item>
+        <item>Service Provider</item>
+    </string-array>
 </resources>
