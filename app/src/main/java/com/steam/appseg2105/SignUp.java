@@ -35,7 +35,7 @@ public class SignUp extends AppCompatActivity {
     Button signUpButton; //REFERS TO THE SUBMIT BUTTON
     EditText emailEdit; //WHERE USER ENTERS EMAIL ADDRESS
     Spinner spinner; //DROPDOWN MENU TO SPECIFY TYPE OF USER THAT WILL BE SIGNING UP
-    List<String> reportFiles;
+    List<String> accountsList;
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +53,12 @@ public class SignUp extends AppCompatActivity {
                 addUser();
             }
         });
-        reportFiles = new ArrayList<>();
-        reportFiles.add("Home Owner");
-        reportFiles.add("Admin");
-        reportFiles.add("Service Provider");
+        accountsList = new ArrayList<>();
+        accountsList.add("Home Owner");
+        accountsList.add("Admin");
+        accountsList.add("Service Provider");
         spinner = findViewById(R.id.spinner); //retrieve the spinner from the xml
-        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,reportFiles);// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,accountsList);// Create an ArrayAdapter using the string array and a default spinner layout
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);// Specify the layout to use when the list of choices appears
         spinner.setAdapter(adapter);// Apply the adapter to the spinner
         FirebaseDatabase.getInstance().getReference().child("users")
@@ -73,7 +73,7 @@ public class SignUp extends AppCompatActivity {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if(dataSnapshot.child("typeOfAccount").getValue(String.class)!= null){
                                     if (dataSnapshot.child("typeOfAccount").getValue(String.class).equals("Admin")) {
-                                        reportFiles.remove("Admin");
+                                        accountsList.remove("Admin");
                                     }}
 
                                 }
@@ -90,7 +90,7 @@ public class SignUp extends AppCompatActivity {
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
-        adapter =  new ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item,reportFiles);
+        adapter =  new ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item,accountsList);
         spinner.setAdapter(adapter);
 
     }
