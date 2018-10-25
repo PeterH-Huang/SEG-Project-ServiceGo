@@ -72,9 +72,10 @@ public class SignUp extends AppCompatActivity {
                             keyReference.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.child("typeOfAccount").getValue(String.class)!= null){
                                     if (dataSnapshot.child("typeOfAccount").getValue(String.class).equals("Admin")) {
                                         reportFiles.remove("Admin");
-                                    }
+                                    }}
 
                                 }
 
