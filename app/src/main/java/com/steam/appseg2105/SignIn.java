@@ -21,12 +21,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class SignIn extends AppCompatActivity {
-    TextView logInText;
-    EditText emailEdit; //USER ENTERS EMAIL ASSOCIATED WITH ACCOUNT
-    EditText passwordEdit; //USER ENTERS THEIR PASSWORD
-    Button logInButton; //REFERS TO THE BUTTON WITH SUBMIT AS LABEL
-    DatabaseReference ref;
-    DatabaseReference accountTypeRef;
+    private TextView logInText;
+    private EditText emailEdit; //USER ENTERS EMAIL ASSOCIATED WITH ACCOUNT
+    private EditText passwordEdit; //USER ENTERS THEIR PASSWORD
+    private Button logInButton; //REFERS TO THE BUTTON WITH SUBMIT AS LABEL
+    private DatabaseReference ref; //reference to database
+    private DatabaseReference accountTypeRef; //reference to the type of account of the current user
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +36,6 @@ public class SignIn extends AppCompatActivity {
         passwordEdit = findViewById(R.id.passwordEditIn);//retrieve the password from the xml.
         logInButton = findViewById(R.id.LogInButton);
         ref = FirebaseDatabase.getInstance().getReference();
-        accountTypeRef = ref.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("typeOfAccount");
         logInButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -44,6 +43,8 @@ public class SignIn extends AppCompatActivity {
             }
         });
     }
+    // starts the correct activity based on the type of account chosen in the dropdown menu
+    // signs the user in using email and password
     private void signUserIn() {
         String email = emailEdit.getText().toString().trim();
         String password = passwordEdit.getText().toString().trim();
@@ -54,6 +55,7 @@ public class SignIn extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(SignIn.this, "Sign in Successful",
                                     Toast.LENGTH_SHORT).show();
+                            accountTypeRef = ref.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("typeOfAccount");
                             accountTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {

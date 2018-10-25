@@ -29,14 +29,14 @@ import java.util.List;
 public class SignUp extends AppCompatActivity {
 
     //NEED TO ADD SECOND PASSWORD AND VERIFY THEY ARE SAME
-    DatabaseReference databaseUsers;
-    EditText usernameEdit;//WHERE USER ENTERS PREFERRED USER HANDLE
-    EditText passwordEdit;//WHERE USER ENTERS PASSWORD
-    Button signUpButton; //REFERS TO THE SUBMIT BUTTON
-    EditText emailEdit; //WHERE USER ENTERS EMAIL ADDRESS
-    Spinner spinner; //DROPDOWN MENU TO SPECIFY TYPE OF USER THAT WILL BE SIGNING UP
-    List<String> accountsList;
-    private FirebaseAuth mAuth;
+    private DatabaseReference databaseUsers;
+    private EditText usernameEdit;//WHERE USER ENTERS PREFERRED USER HANDLE
+    private EditText passwordEdit;//WHERE USER ENTERS PASSWORD
+    private Button signUpButton; //REFERS TO THE SUBMIT BUTTON
+    private EditText emailEdit; //WHERE USER ENTERS EMAIL ADDRESS
+    private Spinner spinner; //DROPDOWN MENU TO SPECIFY TYPE OF USER THAT WILL BE SIGNING UP
+    private List<String> accountsList; //list of strings for the drop down menu
+    private FirebaseAuth mAuth; //reference to database
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +53,8 @@ public class SignUp extends AppCompatActivity {
                 addUser();
             }
         });
+
+        //The following code creates a drop down (spinner) with the account types as options
         accountsList = new ArrayList<>();
         accountsList.add("Home Owner");
         accountsList.add("Admin");
@@ -61,16 +63,21 @@ public class SignUp extends AppCompatActivity {
         ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,accountsList);// Create an ArrayAdapter using the string array and a default spinner layout
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);// Specify the layout to use when the list of choices appears
         spinner.setAdapter(adapter);// Apply the adapter to the spinner
+        // checks to see if an admin already exists, if so, delete this option from the drop down
+        // this occurs on lines 78-80 specifically
         FirebaseDatabase.getInstance().getReference().child("users")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        //loop that cycles through users
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            //reference to the userID of each user
                             String userID = snapshot.getKey();
                             DatabaseReference keyReference = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
                             keyReference.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
+                                    //removes admin from list if there is already an admin
                                     if(dataSnapshot.child("typeOfAccount").getValue(String.class)!= null){
                                     if (dataSnapshot.child("typeOfAccount").getValue(String.class).equals("Admin")) {
                                         accountsList.remove("Admin");
@@ -90,15 +97,16 @@ public class SignUp extends AppCompatActivity {
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
+        //updates the drop down with the new list (or same if admin not deleted)
         adapter =  new ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item,accountsList);
         spinner.setAdapter(adapter);
 
     }
+    //Checks to see if account credentials are valid, if so, it creates the account by calling addAuthUser()
     private void addUser() {
         String email = emailEdit.getText().toString().trim();
         String password = passwordEdit.getText().toString().trim();
         String username = usernameEdit.getText().toString().trim();
-        final String typeOfAcc = String.valueOf(spinner.getSelectedItem());
         //To make sure they are not signed in
         FirebaseAuth.getInstance().signOut();
         //wont create an account with dupe email
@@ -126,27 +134,29 @@ public class SignUp extends AppCompatActivity {
         }else {
             addAuthUser();
 
-
-            //delay to give time to create account and login on firebase
         }
     }
+    //adds user to user model, this stores the type of account, username and password under the user id
     private void addToUserModel() {
         String username = usernameEdit.getText().toString().trim();
         String password = passwordEdit.getText().toString().trim();
         String typeOfAcc = String.valueOf(spinner.getSelectedItem());
         FirebaseUser userNew = FirebaseAuth.getInstance().getCurrentUser();
         if (userNew != null) {
-            //creates the user with the id of the email account
                 String id = userNew.getUid();
+                //creates the user in the user model
                 User userAccount = new User(id, username, password, typeOfAcc);
                 databaseUsers.child(id).setValue(userAccount);
                 usernameEdit.setText("");
                 passwordEdit.setText("");
                 emailEdit.setText("");
                 Toast.makeText(this, "Account Creation Successful.", Toast.LENGTH_LONG).show();
+                //starts the sign in activity
                 startActivity(new Intent(SignUp.this, SignIn.class));
                 finish();
         }}
+        //creates the user in firebase database storing email and password, this account is used to log in
+        //then it calls addToUserModel() to add to a realtime database
         private void addAuthUser() {
             String email = emailEdit.getText().toString().trim();
             String password = passwordEdit.getText().toString().trim();
@@ -154,6 +164,7 @@ public class SignUp extends AppCompatActivity {
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            //delay to allow for automatic sign in
                             if (task.isSuccessful()) {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
@@ -161,13 +172,16 @@ public class SignUp extends AppCompatActivity {
                                         // Magic here
                                     }
                                 }, 1000);
+
                                 addToUserModel();
                             } else {
+                                //if there is already an account with this email
                                 if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                     Toast.makeText(SignUp.this, "User with this email already exists.", Toast.LENGTH_SHORT).show();
                                     usernameEdit.setText("");
                                     passwordEdit.setText("");
                                     emailEdit.setText("");
+                                    //restarts the activity with blank fields
                                     recreate();
                                 }
                             }
@@ -177,9 +191,7 @@ public class SignUp extends AppCompatActivity {
                         }
                     });
         }
-    private void killActivity() {
-        finish();
-    }
+
 
     }
 

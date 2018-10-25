@@ -1,5 +1,7 @@
 package com.steam.appseg2105;
 
+
+//user model for database
 public class User {
     private String id;
     private String username;
@@ -29,8 +31,5 @@ public class User {
     }
     public String getPassword(){
         return password;
-    }
-    public String getTypeOfAccount(){
-        return typeOfAccount;
     }
 }

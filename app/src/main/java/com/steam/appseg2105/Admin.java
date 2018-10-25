@@ -13,9 +13,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class Admin extends AppCompatActivity {
-    TextView welcomeMessage;
-    String mAuth;
-    DatabaseReference ref;
+    //Displays the welcome message
+    private TextView welcomeMessage;
+    //Reference to currently logged in users id
+    private String mAuth;
+    //reference to the location in the database under their uid
+    private DatabaseReference ref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +26,7 @@ public class Admin extends AppCompatActivity {
         welcomeMessage = findViewById(R.id.welcomeMessage);
         mAuth = FirebaseAuth.getInstance().getCurrentUser().getUid();
         ref = FirebaseDatabase.getInstance().getReference("users").child(mAuth);
+        //Obtains the name of the user from the database and prints in a nicely formatted string
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

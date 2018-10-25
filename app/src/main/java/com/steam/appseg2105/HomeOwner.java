@@ -13,9 +13,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class HomeOwner extends AppCompatActivity {
-    TextView welcomeMessageHO;
-    String mAuthHO;
-    DatabaseReference refHO;
+    //Displays the welcome message
+    private TextView welcomeMessageHO;
+    //Reference to currently logged in users id
+    private String mAuthHO;
+    //reference to the location in the database under their uid
+    private DatabaseReference refHO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +26,7 @@ public class HomeOwner extends AppCompatActivity {
         welcomeMessageHO = findViewById(R.id.welcomeMessageHO);
         mAuthHO = FirebaseAuth.getInstance().getCurrentUser().getUid();
         refHO = FirebaseDatabase.getInstance().getReference("users").child(mAuthHO);
+        //Obtains the name of the user from the database and prints in a nicely formatted string
         refHO.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
