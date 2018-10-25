@@ -30,21 +30,21 @@ public class SignUp extends AppCompatActivity {
 
     //NEED TO ADD SECOND PASSWORD AND VERIFY THEY ARE SAME
     DatabaseReference databaseUsers;
-    EditText usernameEdit;
-    EditText passwordEdit;
-    Button signUpButton;
-    EditText emailEdit;
-    Spinner spinner;
+    EditText usernameEdit;//WHERE USER ENTERS PREFERRED USER HANDLE
+    EditText passwordEdit;//WHERE USER ENTERS PASSWORD
+    Button signUpButton; //REFERS TO THE SUBMIT BUTTON
+    EditText emailEdit; //WHERE USER ENTERS EMAIL ADDRESS
+    Spinner spinner; //DROPDOWN MENU TO SPECIFY TYPE OF USER THAT WILL BE SIGNING UP
     List<String> reportFiles;
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        emailEdit = findViewById(R.id.emailEdit);
-        usernameEdit = findViewById(R.id.usernameEdit);
-        passwordEdit = findViewById(R.id.passwordEdit);
-        signUpButton = findViewById(R.id.signupButton);
+        emailEdit = findViewById(R.id.emailEdit);//retrieve the email from the xml.
+        usernameEdit = findViewById(R.id.usernameEdit);//retrieve the username from the xml.
+        passwordEdit = findViewById(R.id.passwordEdit);//retrieve the password from the xml.
+        signUpButton = findViewById(R.id.signupButton);//retrieve the submit button from the xml.
         databaseUsers = FirebaseDatabase.getInstance().getReference("users");
         mAuth = FirebaseAuth.getInstance();
         signUpButton.setOnClickListener(new View.OnClickListener() {
@@ -57,11 +57,10 @@ public class SignUp extends AppCompatActivity {
         reportFiles.add("Home Owner");
         reportFiles.add("Admin");
         reportFiles.add("Service Provider");
-        spinner = findViewById(R.id.spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,reportFiles);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        spinner = findViewById(R.id.spinner); //retrieve the spinner from the xml
+        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,reportFiles);// Create an ArrayAdapter using the string array and a default spinner layout
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);// Specify the layout to use when the list of choices appears
+        spinner.setAdapter(adapter);// Apply the adapter to the spinner
         FirebaseDatabase.getInstance().getReference().child("users")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

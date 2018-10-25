@@ -10,14 +10,14 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button signInButtonMain;
-    Button signUpButtonMain;
+    Button signInButtonMain; //BUTTON LABELLED SIGN IN
+    Button signUpButtonMain; //BUTTON LABELLED SIGN UP
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        signInButtonMain = findViewById(R.id.signInButtonMain);
-        signUpButtonMain = findViewById(R.id.signUpButtonMain);
+        signInButtonMain = findViewById(R.id.signInButtonMain); //retrieve THE XML SIGN IN BUTTON
+        signUpButtonMain = findViewById(R.id.signUpButtonMain); //retrieve THE XML SIGN UP BUTTON
         signUpButtonMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

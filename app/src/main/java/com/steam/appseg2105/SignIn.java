@@ -22,9 +22,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class SignIn extends AppCompatActivity {
     TextView logInText;
-    EditText emailEdit;
-    EditText passwordEdit;
-    Button logInButton;
+    EditText emailEdit; //USER ENTERS EMAIL ASSOCIATED WITH ACCOUNT
+    EditText passwordEdit; //USER ENTERS THEIR PASSWORD
+    Button logInButton; //REFERS TO THE BUTTON WITH SUBMIT AS LABEL
     DatabaseReference ref;
     DatabaseReference accountTypeRef;
     @Override
@@ -32,8 +32,8 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         logInText = findViewById(R.id.LoginText);
-        emailEdit = findViewById(R.id.emailEditIn);
-        passwordEdit = findViewById(R.id.passwordEditIn);
+        emailEdit = findViewById(R.id.emailEditIn);//retrieve the email from the xml.
+        passwordEdit = findViewById(R.id.passwordEditIn);//retrieve the password from the xml.
         logInButton = findViewById(R.id.LogInButton);
         ref = FirebaseDatabase.getInstance().getReference();
         accountTypeRef = ref.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("typeOfAccount");
