@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,6 +22,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class SignUp extends AppCompatActivity {
 
     //NEED TO ADD SECOND PASSWORD AND VERIFY THEY ARE SAME
@@ -30,6 +35,7 @@ public class SignUp extends AppCompatActivity {
     Button signUpButton;
     EditText emailEdit;
     Spinner spinner;
+    List<String> reportFiles;
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +53,52 @@ public class SignUp extends AppCompatActivity {
                 addUser();
             }
         });
+        reportFiles = new ArrayList<>();
+        reportFiles.add("Home Owner");
+        reportFiles.add("Admin");
+        reportFiles.add("Service Provider");
         spinner = findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.user, android.R.layout.simple_spinner_item);
+        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,reportFiles);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        FirebaseDatabase.getInstance().getReference().child("users")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String userID = snapshot.getKey();
+                            DatabaseReference keyReference = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
+                            keyReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.child("typeOfAccount").getValue(String.class).equals("Admin")) {
+                                        reportFiles.remove("Admin");
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+        adapter =  new ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item,reportFiles);
+        spinner.setAdapter(adapter);
+
     }
     private void addUser() {
         String email = emailEdit.getText().toString().trim();
         String password = passwordEdit.getText().toString().trim();
         String username = usernameEdit.getText().toString().trim();
+        final String typeOfAcc = String.valueOf(spinner.getSelectedItem());
         //To make sure they are not signed in
         FirebaseAuth.getInstance().signOut();
         //wont create an account with dupe email
@@ -81,7 +123,33 @@ public class SignUp extends AppCompatActivity {
             Toast.makeText(this, "Your username must be no more than 16 characters long.", Toast.LENGTH_LONG).show();
         }else if (username.length() < 6) {
             Toast.makeText(this, "Your username must be longer than 6 characters.", Toast.LENGTH_LONG).show();
-        }else{
+        }else {
+            addAuthUser();
+
+
+            //delay to give time to create account and login on firebase
+        }
+    }
+    private void addToUserModel() {
+        String username = usernameEdit.getText().toString().trim();
+        String password = passwordEdit.getText().toString().trim();
+        String typeOfAcc = String.valueOf(spinner.getSelectedItem());
+        FirebaseUser userNew = FirebaseAuth.getInstance().getCurrentUser();
+        if (userNew != null) {
+            //creates the user with the id of the email account
+                String id = userNew.getUid();
+                User userAccount = new User(id, username, password, typeOfAcc);
+                databaseUsers.child(id).setValue(userAccount);
+                usernameEdit.setText("");
+                passwordEdit.setText("");
+                emailEdit.setText("");
+                Toast.makeText(this, "Account Creation Successful.", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(SignUp.this, SignIn.class));
+                finish();
+        }}
+        private void addAuthUser() {
+            String email = emailEdit.getText().toString().trim();
+            String password = passwordEdit.getText().toString().trim();
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -108,29 +176,15 @@ public class SignUp extends AppCompatActivity {
                             // ...
                         }
                     });
-            //delay to give time to create account and login on firebase
         }
+    private void killActivity() {
+        finish();
     }
-    private void addToUserModel() {
-        String username = usernameEdit.getText().toString().trim();
-        String password = passwordEdit.getText().toString().trim();
-        String typeOfAcc = String.valueOf(spinner.getSelectedItem());
-        FirebaseUser userNew = FirebaseAuth.getInstance().getCurrentUser();
-        if (userNew != null) {
-            //creates the user with the id of the email account
-                String id = userNew.getUid();
-                User userAccount = new User(id, username, password, typeOfAcc);
-                databaseUsers.child(id).setValue(userAccount);
-                usernameEdit.setText("");
-                passwordEdit.setText("");
-                emailEdit.setText("");
-                Toast.makeText(this, "Account Creation Successful.", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(SignUp.this, SignIn.class));
-        }
+
     }
 
 
-}
+
 
 
 
