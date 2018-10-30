@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomeOwner" />
-        <activity android:name=".ServiceProvider"></activity>
+        <activity android:name=".ServiceProvider" />
+        <activity android:name=".AddAServiceActivity"></activity>
     </application>
 
 </manifest>

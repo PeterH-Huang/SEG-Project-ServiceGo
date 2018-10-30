@@ -1,8 +1,11 @@
 package com.steam.appseg2105;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,10 +22,12 @@ public class Admin extends AppCompatActivity {
     private String mAuth;
     //reference to the location in the database under their uid
     private DatabaseReference ref;
+    private Button addService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
+        addService = findViewById(R.id.addService);
         welcomeMessage = findViewById(R.id.welcomeMessage);
         mAuth = FirebaseAuth.getInstance().getCurrentUser().getUid();
         ref = FirebaseDatabase.getInstance().getReference("users").child(mAuth);
@@ -39,6 +44,14 @@ public class Admin extends AppCompatActivity {
 
             }
         });
+        addService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Admin.this,AddAServiceActivity.class));
+            }
+        });
+
+        }
 
     }
-}
+
