@@ -23,10 +23,12 @@ public class Admin extends AppCompatActivity {
     //reference to the location in the database under their uid
     private DatabaseReference ref;
     private Button addService;
+    private Button editService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
+        editService = findViewById(R.id.editServiceAdmin);
         addService = findViewById(R.id.addService);
         welcomeMessage = findViewById(R.id.welcomeMessage);
         mAuth = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -50,7 +52,12 @@ public class Admin extends AppCompatActivity {
                 startActivity(new Intent(Admin.this,AddAServiceActivity.class));
             }
         });
-
+        editService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Admin.this,EditAServiceActivity.class));
+            }
+        });
         }
 
     }
