@@ -135,6 +135,7 @@ public class SignUp extends AppCompatActivity {
             addAuthUser();
 
         }
+
     }
     //adds user to user model, this stores the type of account, username and password under the user id
     private void addToUserModel() {
