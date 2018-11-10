@@ -24,12 +24,14 @@ public class Admin extends AppCompatActivity {
     private DatabaseReference ref;
     private Button addService;
     private Button editService;
+    private Button deleteService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
         editService = findViewById(R.id.editServiceAdmin);
         addService = findViewById(R.id.addService);
+        deleteService = findViewById(R.id.deleteService);
         welcomeMessage = findViewById(R.id.welcomeMessage);
         mAuth = FirebaseAuth.getInstance().getCurrentUser().getUid();
         ref = FirebaseDatabase.getInstance().getReference("users").child(mAuth);
@@ -56,6 +58,12 @@ public class Admin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Admin.this,EditAServiceActivity.class));
+            }
+        });
+        deleteService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Admin.this,DeleteAServiceActivity.class));
             }
         });
         }
