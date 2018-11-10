@@ -28,7 +28,7 @@ public class TestCasesAddAService {
         text= mActivity.findViewById(R.id.serviceTitle);
         text.setText("plumbing");
         String title= text.getText().toString();
-        assertNotEquals("plumbing",title);
+        assertEquals("plumbing",title);
     }
     @Test
     @UiThreadTest
@@ -36,7 +36,7 @@ public class TestCasesAddAService {
         text= mActivity.findViewById(R.id.hourlyWage);
         text.setText("14.20");
         String hourly= text.getText().toString();
-        assertNotEquals("14.20",hourly);
+        assertEquals("14.20",hourly);
     }
 
 

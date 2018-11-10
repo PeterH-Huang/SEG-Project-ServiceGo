@@ -29,7 +29,7 @@ public class TestCasesEditAService {
         text= mActivity.findViewById(R.id.editServiceHourly);
         text.setText("14.50");
         String hourly= text.getText().toString();
-        assertNotEquals("14.50",hourly);
+        assertEquals("14.50",hourly);
     }
     @Test
     @UiThreadTest
@@ -37,7 +37,7 @@ public class TestCasesEditAService {
         text= mActivity.findViewById(R.id.serviceTitleEdit);
         text.setText("electrician");
         String title= text.getText().toString();
-        assertNotEquals("electrician",title);
+        assertEquals("electrician",title);
     }
     @Test
     @UiThreadTest
