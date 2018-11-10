@@ -35,10 +35,17 @@ public class EditAServiceActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() == null) {
-                            Toast.makeText(EditAServiceActivity.this, "Error",
+                            Toast.makeText(EditAServiceActivity.this, "Service does not exist",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            database.child(editServiceTitle.getText().toString().trim()).child("hourlyRate").setValue(editServiceEdit.getText().toString().trim());
+                            try {
+                                database.child(editServiceTitle.getText().toString().trim()).child("hourlyRate").setValue(editServiceEdit.getText().toString().trim());
+                            }catch(IllegalArgumentException e){
+                                Toast.makeText(EditAServiceActivity.this, "You can only enter numbers in the wage field.", Toast.LENGTH_LONG).show();
+                            }
+                            if(Double.parseDouble(editServiceEdit.getText().toString().trim())<14) {
+                                Toast.makeText(EditAServiceActivity.this, "Hourly wage cannot be less than $14.", Toast.LENGTH_LONG).show();
+                            }
                             Toast.makeText(EditAServiceActivity.this, "Successful Change",
                                     Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(EditAServiceActivity.this,Admin.class));

@@ -55,7 +55,6 @@ public class DeleteAServiceActivity extends AppCompatActivity {
                 databaseServices.child(serviceValue).removeValue();
                 if (dataSnapshot.getValue() == null) {
                     Toast.makeText(DeleteAServiceActivity.this, "Service does not exist.", Toast.LENGTH_LONG).show();
-                    finish();
                 } else {
                     Toast.makeText(DeleteAServiceActivity.this, "Service deletion successful.", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(DeleteAServiceActivity.this, Admin.class));
