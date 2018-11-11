@@ -41,7 +41,7 @@
 
     <Button
         android:id="@+id/deleteService"
-        android:layout_width="380"
+        android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
