@@ -57,7 +57,7 @@ public class AddAServiceActivity extends AppCompatActivity {
             databaseServices.child(serviceTitle.getText().toString().trim()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue().toString().toLowerCase() != null) {
+                    if (dataSnapshot.getValue() != null) {
                         Toast.makeText(AddAServiceActivity.this, "This service already exists", Toast.LENGTH_LONG).show();
                     }else{
                         addToServiceModel(serviceTitle.getText().toString().trim(),Double.parseDouble(hourlyWage.getText().toString().trim()));
