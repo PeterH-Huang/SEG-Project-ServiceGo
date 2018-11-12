@@ -148,6 +148,9 @@ public class SignUp extends AppCompatActivity {
                 //creates the user in the user model
                 User userAccount = new User(id, username, password, typeOfAcc);
                 databaseUsers.child(id).setValue(userAccount);
+                if(userAccount.getTypeOfAccount() == "Service Provider"){
+                    databaseUsers.child(id).child("profile completed?").setValue("no");
+                }
                 usernameEdit.setText("");
                 passwordEdit.setText("");
                 emailEdit.setText("");
