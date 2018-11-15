@@ -99,7 +99,7 @@ public class SignUp extends AppCompatActivity {
                 });
         //updates the drop down with the new list (or same if admin not deleted)
         adapter =  new ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item,accountsList);
-        spinner.setAdapter(adapter);
+        //spinner.setAdapter(adapter);
 
     }
     //Checks to see if account credentials are valid, if so, it creates the account by calling addAuthUser()
@@ -148,9 +148,9 @@ public class SignUp extends AppCompatActivity {
                 //creates the user in the user model
                 User userAccount = new User(id, username, password, typeOfAcc);
                 databaseUsers.child(id).setValue(userAccount);
-                if(userAccount.getTypeOfAccount() == "Service Provider"){
-                    databaseUsers.child(id).child("profile completed?").setValue("no");
-                }
+                //if(userAccount.getTypeOfAccount() == "Service Provider"){                      //**************************************************************************************************
+                //    databaseUsers.child(id).child("profile completed?").setValue("no");        //********Can change back. I dont think this helped fix issue, just wasnt sure what it did.*********
+                //}                                                                              //**************************************************************************************************
                 usernameEdit.setText("");
                 passwordEdit.setText("");
                 emailEdit.setText("");
