@@ -66,12 +66,15 @@ public class DeleteAServiceActivity extends AppCompatActivity {
             deleteServiceModel(serviceTitleValue);
         }
     }
+    //special method for deletion of a service for a service provider
     private void deleteServiceSP() {
         final DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Availabilities");
         r.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
+            //loops through the different services they are associated with
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    //if the service is that of which needs to be deleted it is deleted
                     if (snapshot.getKey().equals(serviceTitle.getText().toString())) {
                         r.child(serviceTitle.getText().toString()).removeValue();
                         Toast.makeText(DeleteAServiceActivity.this, "Service deletion from account was successful.", Toast.LENGTH_LONG).show();

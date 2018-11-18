@@ -5,8 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
+/* an intermediate class to allow the user to choose between seeing availabilities and adding/editing them*/
+// ADDING AND EDITING AVAILABILITIES ARE THE SAME AS IF THE AVAILABILITY ALREADY EXISTS IT WILL OVERWRITE IT
 public class ServiceProviderIntermediate extends AppCompatActivity {
+
     Button addEditAvail;
     Button seeAvail;
     @Override

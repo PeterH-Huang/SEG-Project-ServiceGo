@@ -1,6 +1,7 @@
 package com.steam.appseg2105;
 
 public class Availability {
+    //The name of the service and every day of the week
     private String serviceTitle;
     private String monday;
     private String tuesday;
