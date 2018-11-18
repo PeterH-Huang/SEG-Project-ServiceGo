@@ -66,28 +66,30 @@ public class DeleteAServiceActivity extends AppCompatActivity {
             deleteServiceModel(serviceTitleValue);
         }
     }
-    private void deleteServiceSP(){
-         final DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Availabilities");
+    private void deleteServiceSP() {
+        final DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Availabilities");
         r.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if(snapshot.getKey().equals(serviceTitle.getText().toString())){
+                    if (snapshot.getKey().equals(serviceTitle.getText().toString())) {
                         r.child(serviceTitle.getText().toString()).removeValue();
                         Toast.makeText(DeleteAServiceActivity.this, "Service deletion from account was successful.", Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(DeleteAServiceActivity.this, "This service is not associated with your account", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(DeleteAServiceActivity.this,ServiceProvider.class));
+                        finish();
                     }
                 }
+                Toast.makeText(DeleteAServiceActivity.this, "This service is not associated with your account", Toast.LENGTH_LONG).show();
 
             }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
-                }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     private void deleteServiceModel(final String serviceValue) {
             databaseServices.child(serviceValue).addListenerForSingleValueEvent(new ValueEventListener() {
