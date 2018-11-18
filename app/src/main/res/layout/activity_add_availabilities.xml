@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".AddAvailabilities">
 
+    <Spinner
+        android:id="@+id/spinnerAddy"
+        android:layout_width="251dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.54" />
+
     <LinearLayout
         android:id="@+id/MondayLayout"
         android:layout_width="wrap_content"
@@ -35,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="01"
                 android:textSize="20sp" />
 
             <TextView
@@ -88,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="02"
                 android:textSize="20sp" />
 
             <TextView
@@ -146,7 +161,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="01"
                 android:textSize="20sp" />
 
             <TextView
@@ -199,7 +214,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="02"
                 android:textSize="20sp" />
 
             <TextView
@@ -257,7 +272,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="01"
                 android:textSize="20sp" />
 
             <TextView
@@ -310,7 +325,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="02"
                 android:textSize="20sp" />
 
             <TextView
@@ -368,7 +383,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="01"
                 android:textSize="20sp" />
 
             <TextView
@@ -421,7 +436,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="02"
                 android:textSize="20sp" />
 
             <TextView
@@ -479,7 +494,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="01"
                 android:textSize="20sp" />
 
             <TextView
@@ -532,7 +547,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="02"
                 android:textSize="20sp" />
 
             <TextView
@@ -590,7 +605,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="01"
                 android:textSize="20sp" />
 
             <TextView
@@ -643,7 +658,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="02"
                 android:textSize="20sp" />
 
             <TextView
@@ -702,7 +717,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="01"
                 android:textSize="20sp" />
 
             <TextView
@@ -755,7 +770,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="00"
+                android:text="02"
                 android:textSize="20sp" />
 
             <TextView
@@ -802,7 +817,7 @@
         <com.webianks.library.scroll_choice.ScrollChoice
             android:id="@+id/scrollChoiceH"
             android:layout_width="127dp"
-            android:layout_height="256dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -815,7 +830,7 @@
         <com.webianks.library.scroll_choice.ScrollChoice
             android:id="@+id/scrollChoiceM"
             android:layout_width="127dp"
-            android:layout_height="256dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -828,7 +843,7 @@
         <com.webianks.library.scroll_choice.ScrollChoice
             android:id="@+id/scrollChoiceT"
             android:layout_width="127dp"
-            android:layout_height="256dp"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

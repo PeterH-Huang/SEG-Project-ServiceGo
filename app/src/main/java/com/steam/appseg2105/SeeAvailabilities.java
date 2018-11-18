@@ -39,13 +39,15 @@ public class SeeAvailabilities extends AppCompatActivity {
         r.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                monday.setText(dataSnapshot.child("monday").getValue().toString());
-                tuesday.setText(dataSnapshot.child("tuesday").getValue().toString());
-                wednesday.setText(dataSnapshot.child("wednesday").getValue().toString());
-                thursday.setText(dataSnapshot.child("thursday").getValue().toString());
-                friday.setText(dataSnapshot.child("friday").getValue().toString());
-                saturday.setText(dataSnapshot.child("saturday").getValue().toString());
-                sunday.setText(dataSnapshot.child("sunday").getValue().toString());
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    monday.setText(snapshot.child("monday").getValue().toString());
+                    tuesday.setText(snapshot.child("tuesday").getValue().toString());
+                    wednesday.setText(snapshot.child("wednesday").getValue().toString());
+                    thursday.setText(snapshot.child("thursday").getValue().toString());
+                    friday.setText(snapshot.child("friday").getValue().toString());
+                    saturday.setText(snapshot.child("saturday").getValue().toString());
+                    sunday.setText(dataSnapshot.child("sunday").getValue().toString());
+                }
             }
 
             @Override

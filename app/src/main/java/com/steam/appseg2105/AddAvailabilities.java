@@ -4,23 +4,38 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.TextView;
 
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.webianks.library.scroll_choice.ScrollChoice;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 
 public class AddAvailabilities extends AppCompatActivity {
+
+    private Spinner spinner;
     LinearLayout mondayLeft;
     LinearLayout mondayRight;
     LinearLayout tuesdayLeft;
@@ -98,6 +113,30 @@ public class AddAvailabilities extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_availabilities);
+        spinner = findViewById(R.id.spinnerAddy); //retrieve the spinner from the xml
+        Set<DayOfWeek> daysOfWeek = EnumSet.noneOf( DayOfWeek.class );
+        daysOfWeek.add(DayOfWeek.MONDAY);
+        YearMonth ym = YearMonth.of(2018 , Calendar.getInstance().get(Calendar.MONTH)+1);
+        LocalDate firstOfMonth = ym.atDay( 1 );
+        final List<String> mondays = new ArrayList<>(5);
+        LocalDate ld = firstOfMonth.with(TemporalAdjusters.dayOfWeekInMonth(1, DayOfWeek.MONDAY));
+            do {
+                mondays.add(ld.toString());
+                // Set up next loop.
+                if((Calendar.getInstance().get(Calendar.DATE)+1)>Integer.parseInt(ld.toString().substring(ld.toString().length()-2,ld.toString().length())))
+                {
+                    mondays.remove(mondays.size()-1);
+                }
+                ld = ld.plusWeeks(1);
+
+            } while (YearMonth.from(ld).equals(ym));
+
+
+        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,mondays);// Create an ArrayAdapter using the string array and a default spinner layout
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);// Specify the layout to use when the list of choices appears
+        spinner.setAdapter(adapter);
+
         timeOfDay.add("AM");
         timeOfDay.add("PM");
 
@@ -119,7 +158,7 @@ public class AddAvailabilities extends AppCompatActivity {
         }
 
 
-        setContentView(R.layout.activity_add_availabilities);
+
 
         scrollH = findViewById(R.id.scrollChoiceH);
         scrollH.addItems(hours,0);
@@ -272,14 +311,32 @@ public class AddAvailabilities extends AppCompatActivity {
                     scrollM.setVisibility(View.GONE);
                     scrollT.setVisibility(View.GONE);
                 }else{
+                    String weekOf = String.valueOf(spinner.getSelectedItem());
+                    String monday = addAvailMH1.getText().toString()+":"+addAvailMM1.getText().toString()+" "+addAvailMT1.getText().toString()+" - "+addAvailMH2.getText().toString()+":"+addAvailMM2.getText().toString()+" "+addAvailMT2.getText().toString();
+                    String tuesday = addAvailTH1.getText().toString()+":"+addAvailTM1.getText().toString()+" "+addAvailTT1.getText().toString()+" - "+addAvailTH2.getText().toString()+":"+addAvailTM2.getText().toString()+" "+addAvailTT2.getText().toString();
+                    String wednesday = addAvailWH1.getText().toString()+":"+addAvailWM1.getText().toString()+" "+addAvailWT1.getText().toString()+" - "+addAvailWH2.getText().toString()+":"+addAvailWM2.getText().toString()+" "+addAvailWT2.getText().toString();
+                    String thursday = addAvailThH1.getText().toString()+":"+addAvailThM1.getText().toString()+" "+addAvailThT1.getText().toString()+" - "+addAvailThH2.getText().toString()+":"+addAvailThM2.getText().toString()+" "+addAvailThT2.getText().toString();
+                    String friday = addAvailFH1.getText().toString()+":"+addAvailFM1.getText().toString()+" "+addAvailFT1.getText().toString()+" - "+addAvailFH2.getText().toString()+":"+addAvailFM2.getText().toString()+" "+addAvailFT2.getText().toString();
+                    String saturday = addAvailSH1.getText().toString()+":"+addAvailSM1.getText().toString()+" "+addAvailST1.getText().toString()+" - "+addAvailSH2.getText().toString()+":"+addAvailSM2.getText().toString()+" "+addAvailST2.getText().toString();
+                    String sunday = addAvailSuH1.getText().toString()+":"+addAvailSuM1.getText().toString()+" "+addAvailSuT1.getText().toString()+" - "+addAvailSuH2.getText().toString()+":"+addAvailSuM2.getText().toString()+" "+addAvailSuT2.getText().toString();
                     databaseServices = FirebaseDatabase.getInstance().getReference("users");
-                    //Availability avail = new Availability(getIntent().getStringExtra("item"),addAvailMH1.getText().toString().trim(),addAvailT.getText().toString().trim(),addAvailW.getText().toString().trim(),addAvailThurs.getText().toString().trim(),addAvailF.getText().toString().trim(),addAvailS.getText().toString().trim(),addAvailSun.getText().toString().trim());
-                    //databaseServices.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Availabilities").child(avail.getServiceTitle()).setValue(avail);
+                    Availability avail = new Availability(getIntent().getStringExtra("item"),monday,tuesday,wednesday,thursday,friday,saturday,sunday);
+                    databaseServices.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Availabilities").child(avail.getServiceTitle()).child(weekOf.substring(0,7)).setValue(avail);
                     startActivity(new Intent(AddAvailabilities.this, ServiceProvider.class));
-                    Toast.makeText(AddAvailabilities.this, "Uploading To DataBase Coming Soon..", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddAvailabilities.this, "Successfully added availabilities ", Toast.LENGTH_LONG).show();
                 }
 
             }
         });
+
+    }
+    public String createLd(String choice, String ldOld){
+        String ld;
+        if(choice.equals("edit")){
+            ld = ldOld+" (Already Exists)";
+        }else{
+            ld = ldOld;
+        }
+        return ld;
     }
 }

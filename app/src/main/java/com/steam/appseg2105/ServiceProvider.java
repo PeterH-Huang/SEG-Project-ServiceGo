@@ -1,6 +1,7 @@
 package com.steam.appseg2105;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,12 +31,14 @@ public class ServiceProvider extends AppCompatActivity {
     private DatabaseReference refSP;
     private ListView listView;
     private Button completeProfile;
+    private Button deleteServiceSP;
     private DatabaseReference databaseServices;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_provider);
         listView = findViewById(R.id.list);
+        deleteServiceSP = findViewById(R.id.deleteServiceSP);
         completeProfile = findViewById(R.id.completeProfile);
         databaseServices = FirebaseDatabase.getInstance().getReference("services");
         welcomeMessageSP = findViewById(R.id.welcomeMessageSP);
@@ -52,6 +55,12 @@ public class ServiceProvider extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+        deleteServiceSP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ServiceProvider.this, DeleteAServiceActivity.class));
             }
         });
         operations();
@@ -83,7 +92,7 @@ public class ServiceProvider extends AppCompatActivity {
 
                         }
                     });
-                } else {
+                }else{
                     completeProfile.setVisibility(View.VISIBLE);
                     completeProfile.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -91,8 +100,6 @@ public class ServiceProvider extends AppCompatActivity {
                             startActivity(new Intent(ServiceProvider.this, CompleteProfile.class));
                         }
                     });
-
-
                 }
             }
 
@@ -113,16 +120,9 @@ public class ServiceProvider extends AppCompatActivity {
                     r.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.child(item).getValue() == null){
-                                Intent intent = new Intent(getApplicationContext(), AddAvailabilities.class);
+                                Intent intent = new Intent(getApplicationContext(), ServiceProviderIntermediate.class);
                                 intent.putExtra("item", item);
                                 startActivity(intent);
-                            }else{
-                                Intent intent = new Intent(getApplicationContext(), SeeAvailabilities.class);
-                                intent.putExtra("item", item);
-                                startActivity(intent);
-                            }
-
                         }
 
                         @Override

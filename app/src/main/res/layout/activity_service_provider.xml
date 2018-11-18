@@ -7,6 +7,21 @@
     tools:context=".ServiceProvider">
 
     <Button
+        android:id="@+id/deleteServiceSP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Delete a Service"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.374" />
+
+    <Button
         android:id="@+id/completeProfile"
         android:layout_width="204dp"
         android:layout_height="63dp"
@@ -39,7 +54,7 @@
     <ListView
         android:id="@+id/list"
         android:layout_width="303dp"
-        android:layout_height="410dp"
+        android:layout_height="282dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -48,6 +63,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.954" >
+        app:layout_constraintVertical_bias="0.954">
+
     </ListView>
 </android.support.constraint.ConstraintLayout>

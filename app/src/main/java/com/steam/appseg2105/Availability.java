@@ -19,6 +19,7 @@ public class Availability {
     this.saturday = saturday;
     this.sunday = sunday;
     }
+
     public String getServiceTitle() {
         return serviceTitle;
     }
