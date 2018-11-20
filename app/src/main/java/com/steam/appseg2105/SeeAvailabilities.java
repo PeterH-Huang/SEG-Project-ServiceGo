@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -13,6 +15,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class SeeAvailabilities extends AppCompatActivity {
     private TextView mondayToFriday;
@@ -23,6 +27,7 @@ public class SeeAvailabilities extends AppCompatActivity {
     private TextView friday;
     private TextView saturday;
     private TextView sunday;
+    private ListView weeksList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,26 +40,50 @@ public class SeeAvailabilities extends AppCompatActivity {
         friday = findViewById(R.id.friday);
         saturday = findViewById(R.id.saturday);
         sunday = findViewById(R.id.sunday);
-        DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Availabilities").child(getIntent().getStringExtra("item"));
+        weeksList = findViewById(R.id.weeksList);
+
+        final DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Availabilities").child(getIntent().getStringExtra("item"));
+
         r.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final ArrayList<String> weekArray = new ArrayList<String>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    monday.setText(snapshot.child("monday").getValue().toString());
-                    tuesday.setText(snapshot.child("tuesday").getValue().toString());
-                    wednesday.setText(snapshot.child("wednesday").getValue().toString());
-                    thursday.setText(snapshot.child("thursday").getValue().toString());
-                    friday.setText(snapshot.child("friday").getValue().toString());
-                    saturday.setText(snapshot.child("saturday").getValue().toString());
-                    sunday.setText(dataSnapshot.child("sunday").getValue().toString());
+                    String week = snapshot.getKey().trim();
+                    weekArray.add(week);
                 }
+                ArrayAdapter adapter = new ArrayAdapter(SeeAvailabilities.this, android.R.layout.simple_list_item_1, weekArray);
+                weeksList.setAdapter(adapter);
+                r.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            if (snapshot.child("sunday").exists()) {
+                                mondayToFriday.setText(snapshot.child("serviceTitle").getValue().toString()+" Hours");
+                                monday.setText(snapshot.child("monday").getValue().toString());
+                                tuesday.setText(snapshot.child("tuesday").getValue().toString());
+                                wednesday.setText(snapshot.child("wednesday").getValue().toString());
+                                thursday.setText(snapshot.child("thursday").getValue().toString());
+                                friday.setText(snapshot.child("friday").getValue().toString());
+                                saturday.setText(snapshot.child("saturday").getValue().toString());
+                                //sunday.setText(dataSnapshot.child("sunday").getValue().toString());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(SeeAvailabilities.this, "Done", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+
 }
 }
 

@@ -29,7 +29,8 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/MondayChoice1"
@@ -140,7 +141,8 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/MondayLayout">
+        app:layout_constraintTop_toBottomOf="@+id/MondayLayout"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/TuesdayChoice1"
@@ -251,7 +253,8 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TuesdayLayout">
+        app:layout_constraintTop_toBottomOf="@+id/TuesdayLayout"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/WednesdayChoice1"
@@ -362,7 +365,8 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/WednesdayLayout">
+        app:layout_constraintTop_toBottomOf="@+id/WednesdayLayout"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/ThursdayChoice1"
@@ -473,7 +477,8 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ThursdayLayout">
+        app:layout_constraintTop_toBottomOf="@+id/ThursdayLayout"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/FridayChoice1"
@@ -584,7 +589,8 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/FridayLayout">
+        app:layout_constraintTop_toBottomOf="@+id/FridayLayout"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/SaturdayChoice1"
@@ -696,7 +702,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SaturdayLayout">
+        app:layout_constraintTop_toBottomOf="@+id/SaturdayLayout"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/SundayChoice1"
@@ -848,7 +855,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.145"
+            app:layout_constraintVertical_bias="1.0"
             app:scroll_item_align="center"
             app:scroll_selected_item_text_color="#FFC107"
             tools:visibility="invisible" />
