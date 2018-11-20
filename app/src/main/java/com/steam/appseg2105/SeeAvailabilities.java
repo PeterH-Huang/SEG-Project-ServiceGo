@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,31 +54,39 @@ public class SeeAvailabilities extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String week = snapshot.getKey().trim();
                     weekArray.add(week);
+                    mondayToFriday.setText(snapshot.child("serviceTitle").getValue().toString()+" Hours");
+
                 }
                 ArrayAdapter adapter = new ArrayAdapter(SeeAvailabilities.this, android.R.layout.simple_list_item_1, weekArray);
                 weeksList.setAdapter(adapter);
-                r.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (snapshot.child("sunday").exists()) {
-                                mondayToFriday.setText(snapshot.child("serviceTitle").getValue().toString()+" Hours");
-                                monday.setText(snapshot.child("monday").getValue().toString());
-                                tuesday.setText(snapshot.child("tuesday").getValue().toString());
-                                wednesday.setText(snapshot.child("wednesday").getValue().toString());
-                                thursday.setText(snapshot.child("thursday").getValue().toString());
-                                friday.setText(snapshot.child("friday").getValue().toString());
-                                saturday.setText(snapshot.child("saturday").getValue().toString());
-                                //sunday.setText(dataSnapshot.child("sunday").getValue().toString());
-                            }
-                        }
-                    }
 
+                weeksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(SeeAvailabilities.this, "Done", Toast.LENGTH_LONG).show();
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        r.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    if (snapshot.child("sunday").exists()) {
+                                        monday.setText("Monday: "+snapshot.child("monday").getValue().toString());
+                                        tuesday.setText("Tuesday: "+snapshot.child("tuesday").getValue().toString());
+                                        wednesday.setText("Wednesday: "+snapshot.child("wednesday").getValue().toString());
+                                        thursday.setText("Thursday: "+snapshot.child("thursday").getValue().toString());
+                                        friday.setText("Friday: "+snapshot.child("friday").getValue().toString());
+                                        saturday.setText("Saturday: "+snapshot.child("saturday").getValue().toString());
+                                        //sunday.setText(dataSnapshot.child("sunday").getValue().toString());
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Toast.makeText(SeeAvailabilities.this, "Done", Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
                 });
+
             }
 
             @Override
