@@ -124,13 +124,16 @@ public class AddAvailabilities extends AppCompatActivity {
             do {
                 mondays.add(ld.toString());
                 // Set up next loop.
-                if((Calendar.getInstance().get(Calendar.DATE)+1)>Integer.parseInt(ld.toString().substring(ld.toString().length()-2,ld.toString().length())))
+                if((Calendar.getInstance().get(Calendar.DATE)+1)>Integer.parseInt(ld.toString().substring(ld.toString().length()-2,ld.toString().length())) && ym.toString().equals(YearMonth.of(2018,Calendar.getInstance().get(Calendar.MONTH)+1).toString()))
                 {
                     mondays.remove(mondays.size()-1);
                 }
                 ld = ld.plusWeeks(1);
+                if(!YearMonth.from(ld).equals(ym)){
+                    ym = YearMonth.of(2018,Calendar.getInstance().get(Calendar.MONTH)+2);
+                }
 
-            } while (YearMonth.from(ld).equals(ym));
+            } while (YearMonth.from(ld).equals(ym) && mondays.size() <5);
 
 
         ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,mondays);// Create an ArrayAdapter using the string array and a default spinner layout

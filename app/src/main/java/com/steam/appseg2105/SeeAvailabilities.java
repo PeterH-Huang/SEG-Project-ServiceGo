@@ -1,9 +1,11 @@
 package com.steam.appseg2105;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -44,7 +46,6 @@ public class SeeAvailabilities extends AppCompatActivity {
         saturday = findViewById(R.id.saturday);
         sunday = findViewById(R.id.sunday);
         weeksList = findViewById(R.id.weeksList);
-
         final DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Availabilities").child(getIntent().getStringExtra("item"));
 
         r.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -59,22 +60,22 @@ public class SeeAvailabilities extends AppCompatActivity {
                 }
                 ArrayAdapter adapter = new ArrayAdapter(SeeAvailabilities.this, android.R.layout.simple_list_item_1, weekArray);
                 weeksList.setAdapter(adapter);
-
                 weeksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        final String position = (String) adapterView.getItemAtPosition(i);
                         r.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    if (snapshot.child("sunday").exists()) {
-                                        monday.setText("Monday: "+snapshot.child("monday").getValue().toString());
-                                        tuesday.setText("Tuesday: "+snapshot.child("tuesday").getValue().toString());
-                                        wednesday.setText("Wednesday: "+snapshot.child("wednesday").getValue().toString());
-                                        thursday.setText("Thursday: "+snapshot.child("thursday").getValue().toString());
-                                        friday.setText("Friday: "+snapshot.child("friday").getValue().toString());
-                                        saturday.setText("Saturday: "+snapshot.child("saturday").getValue().toString());
-                                        //sunday.setText(dataSnapshot.child("sunday").getValue().toString());
+                                    if(snapshot.getKey().equals(position)) {
+                                        monday.setText("Monday: " + snapshot.child("monday").getValue().toString());
+                                        tuesday.setText("Tuesday: " + snapshot.child("tuesday").getValue().toString());
+                                        wednesday.setText("Wednesday: " + snapshot.child("wednesday").getValue().toString());
+                                        thursday.setText("Thursday: " + snapshot.child("thursday").getValue().toString());
+                                        friday.setText("Friday: " + snapshot.child("friday").getValue().toString());
+                                        saturday.setText("Saturday: " + snapshot.child("saturday").getValue().toString());
+                                        sunday.setText("Sunday: " + snapshot.child("sunday").getValue().toString());
                                     }
                                 }
                             }
