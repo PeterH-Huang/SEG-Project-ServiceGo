@@ -33,6 +33,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 // ADDING AND EDITING AVAILABILITIES ARE THE SAME AS IF THE AVAILABILITY ALREADY EXISTS IT WILL OVERWRITE IT
+// MAY NEED TO CLICK MORE THAN ONCE
 public class AddAvailabilities extends AppCompatActivity {
 
     private Spinner spinner;

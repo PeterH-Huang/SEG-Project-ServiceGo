@@ -50,11 +50,7 @@ public class CompleteProfile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //make sure the phone number is a number
-                try {
-                    int number = Integer.parseInt(phone.getText().toString().trim());
-                } catch (Exception e) {
-                    Toast.makeText(CompleteProfile.this, "A phone number consists only of numbers", Toast.LENGTH_LONG).show();
-                }
+
                 //check to see if the mandatory fields are filled
                 if ((phone == null) || (address == null) || (companyName == null)) {
                     Toast.makeText(CompleteProfile.this, "Please fill in all fields.", Toast.LENGTH_LONG).show();
@@ -63,7 +59,10 @@ public class CompleteProfile extends AppCompatActivity {
                     Toast.makeText(CompleteProfile.this, "The company name cannot contain numbers", Toast.LENGTH_LONG).show();
                 }else if(phone.getText().toString().length() != 10){
                     Toast.makeText(CompleteProfile.this, "The phone number is incorrect", Toast.LENGTH_LONG).show();
-                } else {
+                }else if(phone.getText().toString().matches("\\D+")){
+                    Toast.makeText(CompleteProfile.this, "The phone number is incorrect", Toast.LENGTH_LONG).show();
+                }
+                else {
                     //adds the values to the database under the users acocunt uid
                     DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
                     userReference.child("phone number").setValue(phone.getText().toString().trim());
