@@ -2,7 +2,6 @@ package com.steam.appseg2105;
 
 public class Availability {
     //The name of the service and every day of the week
-    private String serviceTitle;
     private String monday;
     private String tuesday;
     private String wednesday;
@@ -10,8 +9,7 @@ public class Availability {
     private String friday;
     private String saturday;
     private String sunday;
-    public Availability(String serviceTitle, String monday, String tuesday, String wednesday, String thursday, String friday, String saturday, String sunday) {
-    this.serviceTitle = serviceTitle;
+    public Availability( String monday, String tuesday, String wednesday, String thursday, String friday, String saturday, String sunday) {
     this.monday = monday;
     this.tuesday = tuesday;
     this.wednesday = wednesday;
@@ -21,9 +19,6 @@ public class Availability {
     this.sunday = sunday;
     }
 
-    public String getServiceTitle() {
-        return serviceTitle;
-    }
     public String getMonday() {
         return monday;
     }

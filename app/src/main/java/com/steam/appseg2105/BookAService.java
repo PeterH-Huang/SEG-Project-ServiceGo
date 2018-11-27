@@ -27,6 +27,7 @@ public class BookAService extends AppCompatActivity {
     private EditText userInput;
     private ListView listView;
     private Button serviceClick;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +66,7 @@ public class BookAService extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final ArrayList<String> listy = new ArrayList<String>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if(snapshot.child("rating").getValue() != null) {
+                    if (snapshot.child("rating").getValue() != null) {
                         if (snapshot.child("rating").getValue().equals(userInput.getText().toString())) {
                             String user = snapshot.child("username").getValue().toString();
                             listy.add(user);
@@ -117,73 +118,11 @@ public class BookAService extends AppCompatActivity {
     private void searchByTime() {
         FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshoty) {
                 final ArrayList<String> listy = new ArrayList<String>();
-                for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    FirebaseDatabase.getInstance().getReference().child("users").child(snapshot.getKey()).child("Availabilities").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (final DataSnapshot snapshotServices : dataSnapshot.getChildren()) {
-                                for (final DataSnapshot snapshotDates : dataSnapshot.getChildren()) {
-                                    String start = snapshotDates.getValue().toString().substring(6, 7);
-                                    String end = snapshotDates.getValue().toString().substring(17, 18);
-                                    String theirTime = userInput.getText().toString().substring(6, 7);
-                                    switch (start) {
-                                        case "AM": {
-                                            switch (theirTime) {
-                                                case "AM": {
-                                                    int endy = Integer.parseInt(userInput.getText().toString().substring(12, 13));
-                                                    if (end.equals("AM")) {
-                                                        endy -= 12;
-                                                    }
-                                                    if (Integer.parseInt(userInput.getText().toString().substring(0, 2)) >= Integer.parseInt(snapshotDates.getValue().toString().substring(0, 2)) && Integer.parseInt(snapshotDates.getValue().toString().substring(12,13)) >= endy) {
-                                                        listy.add(snapshot.getKey());
-                                                        continue;
-                                                    }
-                                                }
-                                                case "PM": {
-                                                    int starty = Integer.parseInt(userInput.getText().toString().substring(0, 1));
-                                                    if (start.equals("AM")) {
-                                                        starty -= 12;
-                                                    }
-                                                    if (starty > Integer.parseInt(snapshotDates.getValue().toString().substring(0, 2)) && Integer.parseInt(dataSnapshot.getValue().toString().substring(0, 2)) >= Integer.parseInt(userInput.getText().toString().substring(0, 2))) {
-                                                        listy.add(snapshot.getKey());
-                                                        continue;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        case "PM": {
-                                            switch (theirTime) {
-                                                case "AM": {
-                                                    int starty = Integer.parseInt(userInput.getText().toString().substring(0, 1));
-                                                    if (start.equals("AM")) {
-                                                        starty -= 12;
-                                                    }
-                                                    if (starty >= Integer.parseInt(snapshotDates.getValue().toString().substring(0, 2)) && Integer.parseInt(snapshotDates.getValue().toString().substring(12,13)) >= Integer.parseInt(snapshotDates.getValue().toString().substring(0, 2))) {
-                                                        listy.add(snapshot.getKey());
-                                                        continue;
-                                                    }
-                                                }
-                                                case "PM": {
-                                                    if (Integer.parseInt(userInput.getText().toString().substring(0, 1)) >= Integer.parseInt(snapshotDates.getValue().toString().substring(0, 2)) && Integer.parseInt(dataSnapshot.getValue().toString().substring(0, 2)) >= Integer.parseInt(userInput.getText().toString().substring(0, 2))) {
-                                                        listy.add(snapshot.getKey());
-                                                        continue;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+                for (DataSnapshot snapshot : dataSnapshoty.getChildren()) {
+                    //make sure there is an account or its going to crash//
+                    create(snapshot,listy);
                 }
                 createList(listy);
             }
@@ -201,5 +140,55 @@ public class BookAService extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
+    public ArrayList<String> create(final DataSnapshot snapshot, final ArrayList listy) {
+        if (snapshot.child("typeOfAccount").getValue().toString().equals("Service Provider")) {
+            FirebaseDatabase.getInstance().getReference().child("users").child(snapshot.getKey()).child("Availabilities").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshotServices : dataSnapshot.getChildren()) {
+                        for (DataSnapshot snapshotDatesTemp : snapshotServices.getChildren()) {
+                            for (DataSnapshot snapshotDates : snapshotDatesTemp.getChildren()) {
+                                String defaultStart = snapshotDates.getValue().toString().substring(5, 7);
+                                String defaultEnd = snapshotDates.getValue().toString().substring(13, 15);
+                                String userStart = userInput.getText().toString().substring(6, 8);
+                                String userEnd = userInput.getText().toString().substring(17);
+                                if (defaultStart.equals("AM") && defaultEnd.equals("AM") && userStart.equals("AM") && userEnd.equals("AM")) {
+                                    if (Integer.parseInt(userInput.getText().toString().substring(0, 2)) >= Integer.parseInt(snapshotDates.getValue().toString().substring(0, 2)) && Integer.parseInt(snapshotDates.getValue().toString().substring(8, 10)) >= Integer.parseInt(userInput.getText().toString().substring(11, 13))) {
+                                        listy.add(snapshot.child("username").getValue().toString() + " " + snapshotDatesTemp.getKey()+" "+snapshotDates.getKey());
+                                    }
+                                } else if (defaultStart.equals("AM") && defaultEnd.equals("PM") && userStart.equals("AM") && userEnd.equals("AM")) {
+                                    int realEnd = Integer.parseInt(snapshotDates.getValue().toString().substring(8, 10)) + 12;
+                                    if (Integer.parseInt(userInput.getText().toString().substring(0, 2)) >= Integer.parseInt(snapshotDates.getValue().toString().substring(0, 2)) && Integer.parseInt(userInput.getText().toString().substring(11, 13)) <= realEnd) {
+                                        listy.add(snapshot.child("username").getValue().toString() + " " + snapshotDatesTemp.getKey()+" "+snapshotDates.getKey());
+                                    }
+                                } else if (defaultStart.equals("AM") && defaultEnd.equals("PM") && userStart.equals("AM") && userEnd.equals("PM")) {
+                                    if (Integer.parseInt(userInput.getText().toString().substring(0, 2)) >= Integer.parseInt(snapshotDates.getValue().toString().substring(0, 2)) && Integer.parseInt(snapshotDates.getValue().toString().substring(8, 10)) >= Integer.parseInt(userInput.getText().toString().substring(11, 13))) {
+                                        listy.add(snapshot.child("username").getValue().toString() + " " + snapshotDatesTemp.getKey()+" "+snapshotDates.getKey());
+                                    }
+                                } else if (defaultStart.equals("AM") && defaultEnd.equals("PM") && userStart.equals("PM") && userEnd.equals("PM")) {
+                                    if (Integer.parseInt(snapshotDates.getValue().toString().substring(8, 10)) >= Integer.parseInt(userInput.getText().toString().substring(11, 13))) {
+                                        listy.add(snapshot.child("username").getValue().toString() + " " + snapshotDatesTemp.getKey()+" "+snapshotDates.getKey());
+                                    }
+                                } else if (defaultStart.equals("PM") && defaultEnd.equals("PM") && userStart.equals("PM") && userEnd.equals("PM")) {
+                                    if (Integer.parseInt(snapshotDates.getValue().toString().substring(0, 2)) >= Integer.parseInt(userInput.getText().toString().substring(0, 2)) && Integer.parseInt(snapshotDates.getValue().toString().substring(8, 10)) >= Integer.parseInt(userInput.getText().toString().substring(11, 13))) {
+                                        listy.add(snapshot.child("username").getValue().toString() + " " + snapshotDatesTemp.getKey()+" "+snapshotDates.getKey());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
-}
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            return listy;
+        }
+
+        return null;
+    }}
+
+
