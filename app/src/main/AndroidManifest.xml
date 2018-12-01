@@ -39,6 +39,7 @@
         <activity android:name=".SeeAvailabilities" />
         <activity android:name=".ServiceProviderIntermediate" />
         <activity android:name=".BookAService"></activity>
+        <activity android:name=".SelectAvailabilities"/>
     </application>
 
 </manifest>

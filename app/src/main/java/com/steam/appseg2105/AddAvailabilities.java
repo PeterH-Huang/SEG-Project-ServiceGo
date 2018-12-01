@@ -131,7 +131,7 @@ public class AddAvailabilities extends AppCompatActivity {
                 }
                 ld = ld.plusWeeks(1);
                 if(!YearMonth.from(ld).equals(ym)){
-                    ym = YearMonth.of(2018,Calendar.getInstance().get(Calendar.MONTH)+2);
+                    ym = YearMonth.of(2018,Calendar.getInstance().get(Calendar.MONTH)+1);
                 }
 
             } while (YearMonth.from(ld).equals(ym) && mondays.size() <5);

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -57,8 +58,21 @@ public class BookAService extends AppCompatActivity {
             }
         });
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final String item = (String) adapterView.getItemAtPosition(i);
+                Intent intent = new Intent(getApplicationContext(), SelectAvailabilities.class);
+                intent.putExtra("item", item);
+                startActivity(intent);
+            }
 
-    }
+        });
+
+        }
+
+
+
 
     private void searchByRating() {
         FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -91,21 +105,21 @@ public class BookAService extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final ArrayList<String> listy = new ArrayList<String>();
                 for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    final String searchService = userInput.getText().toString();
                     FirebaseDatabase.getInstance().getReference().child("users").child(snapshot.getKey()).child("Availabilities").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.child(userInput.getText().toString()).exists()) {
+                            if (dataSnapshot.child(searchService).exists()) {
                                 listy.add(snapshot.child("username").getValue().toString());
                             }
+                            createList(listy);
                         }
-
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
 
                         }
                     });
                 }
-                createList(listy);
             }
 
             @Override
@@ -113,6 +127,7 @@ public class BookAService extends AppCompatActivity {
 
             }
         });
+
     }
 
     private void searchByTime() {
