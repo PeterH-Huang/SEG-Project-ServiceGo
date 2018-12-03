@@ -61,9 +61,10 @@ public class BookAService extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                final String item = (String) adapterView.getItemAtPosition(i);
+                final String name = (String) adapterView.getItemAtPosition(i);
                 Intent intent = new Intent(getApplicationContext(), SelectAvailabilities.class);
-                intent.putExtra("item", item);
+                intent.putExtra("service", userInput.getText().toString().trim());
+                intent.putExtra("name", name);
                 startActivity(intent);
             }
 
