@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -76,13 +77,13 @@ public class BookAService extends AppCompatActivity {
 
 
     private void searchByRating() {
-        FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("users").child("Availabilities").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final ArrayList<String> listy = new ArrayList<String>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (snapshot.child("rating").getValue() != null) {
-                        if (snapshot.child("rating").getValue().equals(userInput.getText().toString())) {
+                        if (Double.parseDouble(snapshot.child("rating").getValue().toString()) >= Double.parseDouble(userInput.getText().toString())) {
                             String user = snapshot.child("username").getValue().toString();
                             listy.add(user);
                         }
@@ -137,7 +138,7 @@ public class BookAService extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshoty) {
                 final ArrayList<String> listy = new ArrayList<String>();
                 for (DataSnapshot snapshot : dataSnapshoty.getChildren()) {
-                    //make sure there is an account or its going to crash//
+                    if(snapshot.child("typeOfAccount").getValue().toString().equals("Service Provider"))
                     create(snapshot,listy);
                 }
                 createList(listy);
@@ -155,9 +156,9 @@ public class BookAService extends AppCompatActivity {
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
         listView.setAdapter(adapter);
     }
-
+// YOU NEED THIS SYNTAX: ##:## AM/PM - ##:## AM/PM (with these spaces)
     public ArrayList<String> create(final DataSnapshot snapshot, final ArrayList listy) {
-        if (snapshot.child("typeOfAccount").getValue().toString().equals("Service Provider")) {
+        if(userInput.getText().toString().matches("(1[012]|[1-9]):[0-5][0-9](\\s)?(?i)(AM|PM)-(1[012]|[1-9]):[0-5][0-9](\\s)?(?i)(AM|PM)") && userInput.getText().toString().length() == 19){
             FirebaseDatabase.getInstance().getReference().child("users").child(snapshot.getKey()).child("Availabilities").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -204,7 +205,8 @@ public class BookAService extends AppCompatActivity {
             return listy;
         }
 
-        return null;
+       listy.add("Nope");
+return null;
     }}
 
 

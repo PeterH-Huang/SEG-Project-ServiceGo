@@ -34,6 +34,8 @@ public class HomeOwner extends AppCompatActivity {
     private Spinner spinner;
     private Button bookService;
     private EditText editRating;
+    private EditText comment;
+    private EditText serviceTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,8 @@ public class HomeOwner extends AppCompatActivity {
         arr = new ArrayList<>();
         rating = findViewById(R.id.subRating);
         editRating = findViewById(R.id.serviceProviderRating);
+        comment = findViewById(R.id.comment);
+        serviceTitle = findViewById(R.id.serviceTitleHO);
         arr.add("1");
         arr.add("2");
         arr.add("3");
@@ -87,10 +91,10 @@ public class HomeOwner extends AppCompatActivity {
                                 dB.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if(dataSnapshot.child("numRatings").exists()){
+                                            if(dataSnapshot.child("Availabilities").child(serviceTitle.getText().toString()).child("numRatings").exists()){
                                             int numPresent = Integer.parseInt(dataSnapshot.child("numRatings").getValue().toString());
                                             dB.child("numRatings").setValue(numPresent+1);
-                                            dB.child("rating").setValue((Double.parseDouble(dataSnapshot.child("rating").getValue().toString())*(((double) numPresent/((double) numPresent+1.0))))+(rating*(1.0/((double) numPresent+1.0))));
+                                            // dB.child("rating").setValue(new Rating((Double.parseDouble(dataSnapshot.child("rating").getValue().toString())*(((double) numPresent/((double) numPresent+1.0))))+(rating*(1.0/((double) numPresent+1.0)))),comment.getText().toString());
                                             Toast.makeText(HomeOwner.this, "Successfully rated", Toast.LENGTH_LONG).show();
                                         }else{
                                                 dB.child("numRatings").setValue(rating);
