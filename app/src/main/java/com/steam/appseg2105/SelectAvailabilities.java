@@ -1,10 +1,12 @@
 package com.steam.appseg2105;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.os.Bundle;
@@ -20,11 +22,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class SelectAvailabilities extends AppCompatActivity {
-    private List<String> hoursList;
+    private ArrayList<TextView> hoursList = new ArrayList<>();
     private TextView serviceTitle;
     private TextView monday;
     private TextView tuesday;
@@ -34,6 +35,11 @@ public class SelectAvailabilities extends AppCompatActivity {
     private TextView saturday;
     private TextView sunday;
     private ListView weeksList;
+    private Button confirmService;
+    private DatabaseReference databaseServices;
+
+    private TextView test;
+
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_availabilities);
@@ -46,15 +52,19 @@ public class SelectAvailabilities extends AppCompatActivity {
         saturday = findViewById(R.id.saturday);
         sunday = findViewById(R.id.sunday);
         weeksList = findViewById(R.id.weeksList);
+        confirmService = findViewById(R.id.confirmService);
+        test = findViewById(R.id.test);
 
 
         FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(final DataSnapshot dataSnapshot) {
                 final ArrayList<String> listy = new ArrayList<String>();
                 for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     if(snapshot.child("username").getValue().toString().equals(getIntent().getStringExtra("name"))){
+                        final String providerUid = snapshot.getKey();
+                        test.setText(providerUid);
 
                         for(final DataSnapshot availSnapshot:snapshot.child("Availabilities").child(getIntent().getStringExtra("service")).getChildren()){
                             listy.add(availSnapshot.getKey());
@@ -80,6 +90,37 @@ public class SelectAvailabilities extends AppCompatActivity {
                                 selectWeek(friday,defaultColor);
                                 selectWeek(saturday,defaultColor);
                                 selectWeek(sunday,defaultColor);
+                                confirmService.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Availability availabilitiesChosen = new Availability(null,null,null,null,null,null,null);
+                                        for(int i=0;i<hoursList.size();i++){
+                                            if(hoursList.get(i).getText().toString().substring(0,6).equals("Monday")){
+                                                availabilitiesChosen.setMonday(monday.getText().toString());
+                                            }if(hoursList.get(i).getText().toString().substring(0,7).equals("Tuesday")){
+                                                availabilitiesChosen.setTuesday(tuesday.getText().toString());
+                                            }if(hoursList.get(i).getText().toString().substring(0,9).equals("Wednesday")){
+                                                availabilitiesChosen.setWednesday(wednesday.getText().toString());
+                                            }if(hoursList.get(i).getText().toString().substring(0,8).equals("Thursday")){
+                                                availabilitiesChosen.setThursday(thursday.getText().toString());
+                                            }if(hoursList.get(i).getText().toString().substring(0,6).equals("Friday")){
+                                                availabilitiesChosen.setFriday(friday.getText().toString());
+                                            }if(hoursList.get(i).getText().toString().substring(0,8).equals("Saturday")){
+                                                availabilitiesChosen.setSaturday(saturday.getText().toString());
+                                            }if(hoursList.get(i).getText().toString().substring(0,6).equals("Sunday")){
+                                                availabilitiesChosen.setSunday(sunday.getText().toString());
+                                            }
+                                        }
+                                        databaseServices = FirebaseDatabase.getInstance().getReference("users");
+                                            databaseServices.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Services Booked").child(getIntent().getStringExtra("name")).child(getIntent().getStringExtra("service")).child(week).setValue(availabilitiesChosen);
+                                            databaseServices.child(providerUid).child("Services Booked").child(week).child(getIntent().getStringExtra("service")).child(    dataSnapshot.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("username").getValue().toString()).setValue(availabilitiesChosen);
+                                            startActivity(new Intent(SelectAvailabilities.this, HomeOwner.class));
+                                        Toast.makeText(SelectAvailabilities.this, "Successfully chose availabilities ", Toast.LENGTH_LONG).show();
+
+
+
+                                    }
+                                });
                             }
                         });
                     }
@@ -102,8 +143,10 @@ public class SelectAvailabilities extends AppCompatActivity {
             public void onClick(View view) {
                 if(weekday.getCurrentTextColor()==defaultColor){
                     weekday.setTextColor(Color.RED);
+                    hoursList.add(weekday);
                 }else{
                     weekday.setTextColor(defaultColor);
+                    hoursList.remove(weekday);
                 }
             }
         });
