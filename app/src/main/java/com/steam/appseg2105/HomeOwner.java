@@ -93,13 +93,15 @@ public class HomeOwner extends AppCompatActivity {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             if(dataSnapshot.child("Availabilities").child(serviceTitle.getText().toString()).child("numRatings").exists()){
-                                            int numPresent = Integer.parseInt(dataSnapshot.child("numRatings").getValue().toString());
-                                            dB.child("numRatings").setValue(numPresent+1);
-                                                dB.child("Comments").child(serviceTitle.getText().toString()).child(commenter).setValue(comment.getText().toString());
-                                            // dB.child("rating").setValue(new Rating((Double.parseDouble(dataSnapshot.child("rating").getValue().toString())*(((double) numPresent/((double) numPresent+1.0))))+(rating*(1.0/((double) numPresent+1.0)))),comment.getText().toString());
+                                            int numPresent = Integer.parseInt(dataSnapshot.child("Availabilities").child(serviceTitle.getText().toString()).child("numRatings").getValue().toString());
+                                            dB.child("Availabilities").child(serviceTitle.getText().toString()).child("numRatings").setValue(numPresent+1);
+                                            dB.child("Comments").child(serviceTitle.getText().toString()).child(commenter).setValue(comment.getText().toString());
+                                            double d = (Double.parseDouble(dataSnapshot.child("Availabilities").child(serviceTitle.getText().toString()).child("rating").getValue().toString()))*(((double) numPresent/((double) numPresent+1.0)));
+                                            dB.child("Availabilities").child(serviceTitle.getText().toString()).child("rating").setValue(new RatingR(d + (rating*(1.0/((double) numPresent+1.0)))));
                                             Toast.makeText(HomeOwner.this, "Successfully rated", Toast.LENGTH_LONG).show();
                                         }else{
-                                                dB.child("numRatings").setValue(rating);
+                                                dB.child("Availabilities").child(serviceTitle.getText().toString()).child("rating").setValue(rating);
+                                                dB.child("Availabilities").child(serviceTitle.getText().toString()).child("numRatings").setValue(1);
                                                 dB.child("Comments").child(serviceTitle.getText().toString()).child(commenter).setValue(comment.getText().toString());
                                                 Toast.makeText(HomeOwner.this, "Successfully rated", Toast.LENGTH_LONG).show();
                                             }

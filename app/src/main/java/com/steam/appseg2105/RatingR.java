@@ -1,17 +1,12 @@
 package com.steam.appseg2105;
 
-public class Rating {
+public class RatingR {
     private double rating;
-    private String comment;
-    public Rating(double rating, String comment){
+    public RatingR(double rating){
         this.rating = rating;
-        this.comment = comment;
     }
     public double getRating(){
         return rating;
-    }
-    public String getComment(){
-        return comment;
     }
     public void setRating(int rating){
         this.rating = rating;
