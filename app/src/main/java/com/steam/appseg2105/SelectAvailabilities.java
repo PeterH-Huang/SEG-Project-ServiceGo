@@ -38,7 +38,6 @@ public class SelectAvailabilities extends AppCompatActivity {
     private Button confirmService;
     private DatabaseReference databaseServices;
 
-    private TextView test;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -53,7 +52,6 @@ public class SelectAvailabilities extends AppCompatActivity {
         sunday = findViewById(R.id.sunday);
         weeksList = findViewById(R.id.weeksList);
         confirmService = findViewById(R.id.confirmService);
-        test = findViewById(R.id.test);
 
 
         FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -64,7 +62,6 @@ public class SelectAvailabilities extends AppCompatActivity {
 
                     if(snapshot.child("username").getValue().toString().equals(getIntent().getStringExtra("name"))){
                         final String providerUid = snapshot.getKey();
-                        test.setText(providerUid);
 
                         for(final DataSnapshot availSnapshot:snapshot.child("Availabilities").child(getIntent().getStringExtra("service")).getChildren()){
                             listy.add(availSnapshot.getKey());
