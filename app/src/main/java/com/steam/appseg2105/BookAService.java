@@ -77,13 +77,13 @@ public class BookAService extends AppCompatActivity {
 
 
     private void searchByRating() {
-        FirebaseDatabase.getInstance().getReference().child("users").child("Availabilities").addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final ArrayList<String> listy = new ArrayList<String>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.child("rating").getValue() != null) {
-                        if (Double.parseDouble(snapshot.child("rating").getValue().toString()) >= Double.parseDouble(userInput.getText().toString())) {
+                    if (snapshot.child("numRatings").getValue() != null) {
+                        if (Double.parseDouble(snapshot.child("numRatings").getValue().toString()) >= Double.parseDouble(userInput.getText().toString())) {
                             String user = snapshot.child("username").getValue().toString();
                             listy.add(user);
                         }
@@ -158,7 +158,7 @@ public class BookAService extends AppCompatActivity {
     }
 // YOU NEED THIS SYNTAX: ##:## AM/PM - ##:## AM/PM (with these spaces)
     public ArrayList<String> create(final DataSnapshot snapshot, final ArrayList listy) {
-        if(userInput.getText().toString().matches("(1[012]|[1-9]):[0-5][0-9](\\s)?(?i)(AM|PM)-(1[012]|[1-9]):[0-5][0-9](\\s)?(?i)(AM|PM)") && userInput.getText().toString().length() == 19){
+        if(userInput.getText().toString().matches("(1[012]|[1-9]):[0-5][0-9](\\s)?(?i)(AM|PM)-(1[012]|[1-9]):[0-5][0-9](\\s)?(?i)(AM|PM)") && userInput.getText().toString().length() > 1){
             FirebaseDatabase.getInstance().getReference().child("users").child(snapshot.getKey()).child("Availabilities").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
