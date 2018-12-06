@@ -86,6 +86,7 @@ public class HomeOwner extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                final String commenter = dataSnapshot.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("username").getValue().toString();
                                 if(snapshot.child("username").getValue().toString().equals(sP)){
                                     final DatabaseReference dB = FirebaseDatabase.getInstance().getReference().child("users").child(snapshot.getKey());
                                 dB.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -94,10 +95,12 @@ public class HomeOwner extends AppCompatActivity {
                                             if(dataSnapshot.child("Availabilities").child(serviceTitle.getText().toString()).child("numRatings").exists()){
                                             int numPresent = Integer.parseInt(dataSnapshot.child("numRatings").getValue().toString());
                                             dB.child("numRatings").setValue(numPresent+1);
+                                                dB.child("Comments").child(serviceTitle.getText().toString()).child(commenter).setValue(comment.getText().toString());
                                             // dB.child("rating").setValue(new Rating((Double.parseDouble(dataSnapshot.child("rating").getValue().toString())*(((double) numPresent/((double) numPresent+1.0))))+(rating*(1.0/((double) numPresent+1.0)))),comment.getText().toString());
                                             Toast.makeText(HomeOwner.this, "Successfully rated", Toast.LENGTH_LONG).show();
                                         }else{
                                                 dB.child("numRatings").setValue(rating);
+                                                dB.child("Comments").child(serviceTitle.getText().toString()).child(commenter).setValue(comment.getText().toString());
                                                 Toast.makeText(HomeOwner.this, "Successfully rated", Toast.LENGTH_LONG).show();
                                             }
                                         }
